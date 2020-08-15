@@ -224,7 +224,7 @@ def capm_return(
 ):
     """
     Compute a return estimate using the Capital Asset Pricing Model. Under the CAPM,
-    asset returns are equal to market returns plus a :math:`\beta` term encoding
+    asset returns are equal to risk-free returns plus a :math:`\beta` term encoding
     the relative risk of the asset.
 
     .. math::
@@ -237,7 +237,7 @@ def capm_return(
     :type prices: pd.DataFrame
     :param market_prices: adjusted closing prices of the benchmark, defaults to None
     :type market_prices: pd.DataFrame, optional
-    :param returns_data: if true, the first arguments are returns instead of prices.
+    :param returns_data: if true, "prices" and "market_prices" are returns instead of prices.
     :type returns_data: bool, defaults to False.
     :param risk_free_rate: risk-free rate of borrowing/lending, defaults to 0.02.
                            You should use the appropriate time period, corresponding
@@ -265,10 +265,9 @@ def capm_return(
             market_returns = None
     # Use the equally-weighted dataset as a proxy for the market
     if market_returns is None:
-        # Append market return to right and compute sample covariance matrix
         returns["mkt"] = returns.mean(axis=1)
-
     else:
+        # Append market return to right
         market_returns.columns = ["mkt"]
         returns = returns.join(market_returns, how="left")
 
